@@ -1,0 +1,34 @@
+
+
+public class Car extends Thread implements Runnable
+{
+    
+    private String path;
+    private Bridge bridge;
+    /**
+     * Constructor for objects of class Cars
+     */
+    public Car(Bridge bridge,String path)
+    {
+        this.path = path;
+        this.bridge = bridge;
+    }
+
+   public String getPath(){
+       
+       return path;
+    }
+   public void run() {
+       
+       bridge.cross();
+       System.out.println("A car is attempting to cross the bridge");
+       try{
+           Thread.sleep(10000);
+       
+       }
+       catch (InterruptedException e) {}
+       
+       System.out.println("A car has crossed the bridge travelling "+getPath());
+       bridge.done();
+    }
+}
