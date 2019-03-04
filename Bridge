@@ -1,23 +1,80 @@
+/**
+ * This class uses a semaphore to simulate thread activity
+ * using East and West-bound vehicles crossing a one-lane bridge.
+ * One vehicle must wait for the opposite vehicle to cross, and vice versa.
+ *
+ * @author (Benjamin Bennet)
+ * @author (John Draper)
+ * 
+ * @version (a version number or a date)
+ */
 import java.util.concurrent.Semaphore;
-
+import java.util.Random;
 public class Bridge
 {
     private Semaphore bridgeKey;
+    Random rng = new Random();
+    String[] directions = {"East","West"};
     
-    
-    
-    public Bridge(){
-        
-     bridgeKey = new Semaphore(1);   
+    public Bridge()
+    {
+        bridgeKey = new Semaphore(1);   
     }
-    public void cross(){
-        
-     try {
-         bridgeKey.acquire();   
+    
+    public void cross()
+    {
+        int directionValue = getDirectionNumber();
+        String currentDirection = directions[directionValue];
+        try 
+        {
+            bridgeKey.acquire();
+            System.out.println(currentDirection + "bound vehicle is on bridge!");
+            getLock(currentDirection, Thread.currentThread().getName());
+            done();
+            System.out.println(currentDirection+ "bound vehicle is done!");
         }
-     catch (InterruptedException e) {}
+        catch (InterruptedException e) {}
     }
-    public void done(){
+    
+    public int getDirectionNumber()
+    {
+        return rng.nextInt(2);
+    }
+    
+    public synchronized void getLock(String direction, String threadName)
+    {
+        switch(direction)
+        {
+            case "East":
+            if(direction.equals(directions[0]))
+            {
+                System.out.println("Eastbound vehicle begins crossing the bridge!");
+            }
+            break;
+            
+            case "West":
+            if(direction.equals(directions[1]))
+            {
+                System.out.println("Westbound vehicle begins crossing the bridge!");
+            }
+            break;
+        }
+    }
+    
+    public void done()
+    {
        bridgeKey.release();
     }
+    
+    public static void main(String[] args)
+    {
+        Bridge bridge = new Bridge();
+        
+        //run 5 instances of east and west vehicles crossing the bridge.
+        for(int i = 0; i < 5; i++)
+        {
+            bridge.cross();
+        }
+    }
 }
+
