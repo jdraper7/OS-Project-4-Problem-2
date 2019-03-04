@@ -1,0 +1,28 @@
+import java.util.concurrent.Semaphore;
+/**
+ * Write a description of class Bridge here.
+ *
+ * @author (your name)
+ * @version (a version number or a date)
+ */
+public class Bridge
+{
+    private Semaphore bridgeKey;
+    
+    
+    
+    public Bridge(){
+        
+     bridgeKey = new Semaphore(1);   
+    }
+    public void cross(){
+        
+     try {
+         bridgeKey.acquire();   
+        }
+     catch (InterruptedException e) {}
+    }
+    public void done(){
+       bridgeKey.release();
+    }
+}
